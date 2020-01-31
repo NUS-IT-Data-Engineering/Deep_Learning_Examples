@@ -5,5 +5,5 @@ Sample code for Deep Learning on NUS IT HPC
 
 ### PyTorch
 
-- [Image Classification]()
- - Flickr Style dataset with CSV Dataloader code.
+- [Image Classification](https://github.com/NUS-IT-Data-Engineering/Deep_Learning_Examples/tree/master/PyTorch/image_classification/flickr_style)
+  - Flickr Style dataset with CSV Dataloader code.
