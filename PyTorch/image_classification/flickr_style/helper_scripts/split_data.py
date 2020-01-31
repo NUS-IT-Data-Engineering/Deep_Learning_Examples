@@ -18,5 +18,5 @@ if __name__ == '__main__':
         root_path = sys.argv[3].rstrip()
     except Exception as e:
         print("Incorrect usage.")
-    sep = " "
+    sep = ","
     main(csv_path, split_ratio, sep, root_path)
