@@ -22,13 +22,17 @@ lr=0.001
 bs=64
 epochs=1000
 
+# Checkpoint folder will be created in working directory
 ckpt_fldr="checkpoint_$PBS_JOBID"
 
-
+# Replace the following to your folders.
 trainset="/scratch/ccekwk/flickr_style/split_train.csv"
 valset="/scratch/ccekwk/flickr_style/split_val.csv"
 testset="/scratch/ccekwk/flickr_style/test.csv"
 root_fldr="/scratch/ccekwk/flickr_style/images/"
+
+pretrained="True"
+toponly="False"
 
 singularity exec $image bash << EOF > stdout.$PBS_JOBID 2> stderr.$PBS_JOBID
 #insert commands here
@@ -44,5 +48,5 @@ echo $valset
 echo $trainset
 echo $root_fldr
 
-python main.py $trainset $testset $valset $root_fldr $lr $bs $epochs $ckpt_fldr
+python main.py $trainset $testset $valset $root_fldr $lr $bs $epochs $ckpt_fldr $pretrained $toponly
 EOF

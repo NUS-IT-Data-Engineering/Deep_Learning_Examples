@@ -166,7 +166,7 @@ def eval_acc(net, testloader, device):
 
 ### Main ###
 
-def main(train_csv, val_csv, test_csv, root, params, ckpt_folder):
+def main(train_csv, val_csv, test_csv, root, params, ckpt_folder="checkpoint/", use_pretrained=False, top_only=False):
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(device) # prints cuda if on cuda
@@ -176,7 +176,7 @@ def main(train_csv, val_csv, test_csv, root, params, ckpt_folder):
     num_classes = trainloader.dataset.num_classes
 
     # Model
-    net = get_model(num_classes, False, False).to(device)
+    net = get_model(num_classes, train_top_only=top_only, use_pretrained= use_pretrained).to(device)
     print(net)
     # Print model's state_dict
     print("Model's state_dict:")
@@ -205,10 +205,25 @@ if __name__ == '__main__':
         epochs = int(sys.argv[7].rstrip())
         
         ckpt_folder = sys.argv[8].rstrip()
+
+        use_pretrained= sys.argv[9].rstrip()
+        top_only = sys.argv[10].rstrip()
+
+        if use_pretrained == "True":
+            use_pretrained = True
+        else:
+            use_pretrained = False
+
+        if top_only == "True":
+            top_only = True
+        else:
+            top_only = False
+            
         params = get_params(lr, batch_size, epochs)
         print(params)
     except Exception as e:
         print(e)
         print(sys.argv)
         print("Not enough parameters.")
-    main(train_csv, val_csv, test_csv, root, params, ckpt_folder)
+        sys.exit()
+    main(train_csv, val_csv, test_csv, root, params, ckpt_folder, use_pretrained, top_only)
