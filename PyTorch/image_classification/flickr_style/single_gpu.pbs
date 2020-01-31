@@ -1,0 +1,48 @@
+#!/bin/bash
+#PBS -l select=1:mem=60gb:ncpus=10:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -q volta_gpu
+### Specify correct Project ID:
+#PBS -P Volta_gpu_demo
+#PBS -N flickr_style_resnet_pytorch
+#PBS -j oe
+
+# Singularity image to use
+# Other images available in /app1/common/singularity-img/3.0.0/
+image="/app1/common/singularity-img/3.0.0/pytorch_1.2_cuda10.0_cudnn7_devel-py3.simg"
+
+# Change to directory where job was submitted
+if [ x"$PBS_O_WORKDIR" != x ] ; then
+ cd "$PBS_O_WORKDIR" || exit $?
+fi
+
+np=`cat $PBS_NODEFILE | wc -l`
+
+lr=0.001
+bs=64
+epochs=1000
+
+ckpt_fldr="checkpoint_$PBS_JOBID"
+
+
+trainset="/scratch/ccekwk/flickr_style/split_train.csv"
+valset="/scratch/ccekwk/flickr_style/split_val.csv"
+testset="/scratch/ccekwk/flickr_style/test.csv"
+root_fldr="/scratch/ccekwk/flickr_style/images/"
+
+singularity exec $image bash << EOF > stdout.$PBS_JOBID 2> stderr.$PBS_JOBID
+#insert commands here
+
+mkdir $ckpt_fldr
+
+echo $ckpt_fldr
+echo $bs
+echo $lr
+echo $epochs
+echo $testset
+echo $valset
+echo $trainset
+echo $root_fldr
+
+python main.py $trainset $testset $valset $root_fldr $lr $bs $epochs $ckpt_fldr
+EOF
